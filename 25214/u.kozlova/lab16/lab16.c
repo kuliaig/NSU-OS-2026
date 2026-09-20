@@ -11,6 +11,8 @@ static int getch(void)
 
 	new = old;
 	new.c_lflag &= ~(ICANON | ECHO);
+    new.c_cc[VMIN] = 1;
+    new.c_cc[VTIME] = 0;
 
 	tcsetattr(STDIN_FILENO, TCSANOW, &new);
 
