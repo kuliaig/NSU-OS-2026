@@ -2,10 +2,21 @@
 #include <stdlib.h>
 #include <termios.h>
 #include <unistd.h>
+#include <signal.h>
+
+static struct termios old;
+
+static void setOld(int sig) 
+{
+    (void)sig;
+    tcsetattr(STDIN_FILENO, TCSANOW, &old);
+    printf("\nCtrl+C\n");
+    exit(1);
+}
 
 static int getch(void)
 {
-    struct termios old, new;
+    struct termios new;
 
 	tcgetattr(STDIN_FILENO, &old);
 
@@ -28,6 +39,8 @@ static int getch(void)
 
 int main()
 {
+    signal(SIGINT, setOld);
+
     printf("Введите символ: ");
     fflush(stdout);
 
